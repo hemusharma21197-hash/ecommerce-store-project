@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}ShopEasy - Home{% endblock %}
+
+{% block content %}
+
+<!-- HERO WITH PRODUCT IMAGES -->
+<div class="hero" style="background-image: url('https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=1500');">
+    <div class="hero-box">
+        <h1>Welcome to ShopEasy</h1>
+        <p>Your one-stop shop for everything you love — delivered fast.</p>
+        <a href="{{ url_for('products') }}">
+            <button>Start Shopping</button>
+        </a>
+    </div>
+</div>
+
+<h2 style="margin-left:20px;">Featured Deals</h2>
+
+<!-- Your featured section stays unchanged -->
+
+{% endblock %}
