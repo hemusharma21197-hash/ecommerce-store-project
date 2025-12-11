@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Order History - ShopEasy{% endblock %}
+
+{% block content %}
+<div class="orders-container">
+
+    <h2 class="page-title"><i class="fa fa-receipt"></i> Order History</h2>
+
+    {% if orders %}
+        {% for order in orders %}
+        <div class="order-card">
+
+            <div class="order-header">
+                <h3>Order #{{ order.order_id }}</h3>
+                <span class="order-status">{{ order.status }}</span>
+            </div>
+
+            <p><i class="fa fa-calendar"></i> {{ order.date }}</p>
+            <p><i class="fa fa-user"></i> {{ order.customer_name }}</p>
+            <p><i class="fa fa-envelope"></i> {{ order.email }}</p>
+
+            <h4>Items Ordered:</h4>
+            <ul class="order-items">
+                {% for item in order["items"] %}
+                <li>
+                    {{ item.name }} - ${{ "%.2f"|format(item.price) }} × {{ item.quantity }}
+                </li>
+                {% endfor %}
+            </ul>
+
+            <p class="order-total">
+                <strong>Total:</strong> ${{ "%.2f"|format(order.total) }}
+            </p>
+
+        </div>
+        {% endfor %}
+
+    {% else %}
+    <div class="empty-orders">
+        <h2><i class="fa fa-folder-open"></i> No Orders Found</h2>
+        <p>You have not placed any orders yet.</p>
+        <a href="{{ url_for('products') }}" class="btn">Start Shopping</a>
+    </div>
+    {% endif %}
+
+</div>
+
+<style>
+.orders-container {
+    max-width: 900px;
+    margin: auto;
+}
+
+.order-card {
+    background: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.order-header h3 {
+    margin: 0;
+}
+
+.order-status {
+    background: #d1fae5;
+    padding: 5px 12px;
+    border-radius: 15px;
+    color: #065f46;
+    font-weight: bold;
+}
+
+.order-items {
+    list-style: none;
+    padding-left: 0;
+}
+
+.order-items li {
+    padding: 5px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.order-total {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-top: 10px;
+}
+</style>
+{% endblock %}

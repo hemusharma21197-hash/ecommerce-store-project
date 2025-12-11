@@ -1,0 +1,240 @@
+{% extends "base.html" %}
+
+{% block title %}Your Cart – ShopEasy{% endblock %}
+
+{% block content %}
+
+<!-- PAGE HEADER -->
+<div class="cart-header">
+    <h1>Your Shopping Cart</h1>
+</div>
+
+<div class="cart-layout">
+
+    <!-- LEFT SIDE: CART ITEMS -->
+    <div class="cart-items">
+
+        {% if cart %}
+            {% for item in cart %}
+            <div class="cart-card">
+
+                <!-- Product Image -->
+                <div class="img-box">
+                    <img src="{{ item.image }}" alt="{{ item.name }}"
+                         onerror="this.src='https://via.placeholder.com/120?text=Image'">
+                </div>
+
+                <!-- Product Info -->
+                <div class="info-box">
+                    <h2>{{ item.name }}</h2>
+
+                    <p class="price">${{ "%.2f"|format(item.price) }}</p>
+
+                    <!-- Quantity Update Form -->
+                    <form method="POST" action="{{ url_for('update_cart', product_id=item.id) }}" class="qty-form">
+                        <label>Qty:</label>
+                        <input type="number" name="quantity" value="{{ item.quantity }}" min="1">
+                        <button type="submit">Update</button>
+                    </form>
+
+                    <!-- Remove Button -->
+                    <a href="{{ url_for('remove_from_cart', product_id=item.id) }}" class="remove-btn">
+                        Remove
+                    </a>
+                </div>
+
+            </div>
+            {% endfor %}
+        {% else %}
+            <p class="empty-text">Your cart is empty.</p>
+            <a class="shop-btn" href="{{ url_for('products') }}">Start Shopping</a>
+        {% endif %}
+
+    </div>
+
+    <!-- RIGHT SIDE: ORDER SUMMARY -->
+    {% if cart %}
+    <div class="summary-box">
+        <h3>Order Summary</h3>
+
+        <div class="summary-line">
+            <span>Subtotal</span>
+            <span>${{ "%.2f"|format(total_price) }}</span>
+        </div>
+
+        <div class="summary-line">
+            <span>Estimated Tax (8%)</span>
+            <span>${{ "%.2f"|format(total_price * 0.08) }}</span>
+        </div>
+
+        <div class="summary-total">
+            <span>Total</span>
+            <span>${{ "%.2f"|format(total_price + (total_price * 0.08)) }}</span>
+        </div>
+
+        <a href="{{ url_for('checkout') }}" class="checkout-btn">
+            Proceed to Checkout
+        </a>
+
+        <a href="{{ url_for('clear_cart') }}" class="clear-btn">Clear Cart</a>
+    </div>
+    {% endif %}
+
+</div>
+
+
+<!-- ================= STYLES ================= -->
+<style>
+
+.cart-header h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+/* Layout */
+.cart-layout {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 25px;
+}
+
+.cart-items {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+/* Cart Card */
+.cart-card {
+    display: flex;
+    gap: 15px;
+    border-bottom: 1px solid #ddd;
+    padding: 15px 0;
+}
+
+.img-box img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+/* Product Info */
+.info-box h2 {
+    font-size: 1.1rem;
+}
+
+.price {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #b12704;
+}
+
+/* Quantity Form */
+.qty-form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+}
+.qty-form input {
+    width: 60px;
+    padding: 5px;
+    border: 1px solid #bbb;
+    border-radius: 4px;
+}
+.qty-form button {
+    background: #febd69;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+.qty-form button:hover {
+    background: #f3a847;
+}
+
+/* Remove Button */
+.remove-btn {
+    display: inline-block;
+    margin-top: 10px;
+    color: #007185;
+    text-decoration: none;
+}
+.remove-btn:hover {
+    text-decoration: underline;
+}
+
+/* Empty Cart */
+.empty-text {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+}
+.shop-btn {
+    background: #febd69;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: black;
+    border-radius: 6px;
+}
+.shop-btn:hover { background: #f3a847; }
+
+/* Summary Box */
+.summary-box {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    height: fit-content;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.summary-box h3 {
+    margin-bottom: 15px;
+}
+
+.summary-line {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.summary-total {
+    display: flex;
+    justify-content: space-between;
+    margin: 15px 0;
+    font-size: 1.3rem;
+    font-weight: bold;
+}
+
+.checkout-btn {
+    display: block;
+    background: #ffa41c;
+    padding: 12px;
+    text-align: center;
+    color: #111;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+.checkout-btn:hover {
+    background: #f08804;
+}
+
+.clear-btn {
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+/* Responsive */
+@media(max-width: 900px) {
+    .cart-layout {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+{% endblock %}

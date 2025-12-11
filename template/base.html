@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ShopEasy{% endblock %}</title>
+
+    <!-- Load CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+</head>
+<body>
+
+<!-- ================= HEADER ================= -->
+<header class="header">
+    <div class="header-left">
+
+        <!-- LOGO -->
+        <a href="{{ url_for('index') }}" class="logo">
+            <i class="fa fa-cart-shopping"></i> ShopEasy
+        </a>
+
+        <!-- SEARCH BAR -->
+        <form class="search-box" action="{{ url_for('products') }}" method="GET">
+            <input type="text" name="q" placeholder="Search products...">
+            <button type="submit"><i class="fa fa-search"></i></button>
+        </form>
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="header-right">
+
+        {% if current_user.is_authenticated %}
+            <a href="{{ url_for('profile') }}">
+                <i class="fa fa-user"></i> {{ current_user.name }}
+            </a>
+
+            <a href="{{ url_for('view_orders') }}">
+                <i class="fa fa-box"></i> Orders
+            </a>
+
+            <a href="{{ url_for('view_cart') }}" class="cart-link">
+                <i class="fa fa-shopping-cart"></i>
+                Cart
+                {% if session.get('cart') %}
+                    <span class="cart-badge">{{ session['cart']|length }}</span>
+                {% endif %}
+            </a>
+
+            <a href="{{ url_for('logout') }}">
+                <i class="fa fa-right-from-bracket"></i> Logout
+            </a>
+
+        {% else %}
+            <a href="{{ url_for('login') }}">
+                <i class="fa fa-user"></i> Login
+            </a>
+        {% endif %}
+
+    </div>
+</header>
+
+<!-- ================= CATEGORY NAV BAR ================= -->
+<nav class="nav">
+    <a href="{{ url_for('products') }}?category=Electronics">Electronics</a>
+    <a href="{{ url_for('products') }}?category=Clothing">Clothing</a>
+    <a href="{{ url_for('products') }}?category=Books">Books</a>
+    <a href="{{ url_for('products') }}">All Products</a>
+</nav>
+
+<!-- ================= MAIN CONTENT ================= -->
+<main class="page">
+    {% block content %}{% endblock %}
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="footer">
+    © 2024 ShopEasy — All Rights Reserved.
+</footer>
+
+</body>
+</html>
